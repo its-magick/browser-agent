@@ -59,7 +59,7 @@ docker run -p 3000:3000 --env-file .env browser-agent
 
 ## 🚨 Common Issues
 
-- If check your Redis URL if it isn't connecting, make sure it's not on vacation (running)
+- Check your Redis URL if it isn't connecting, make sure it's not on vacation (running)
 - Playwright must be installed at the root directory level
 - If all else fails, grab a coffee ☕ and check the logs
 
