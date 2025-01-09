@@ -1,0 +1,13 @@
+ably
+asyncio
+fastapi
+langchain-anthropic
+langchain-google-genai
+langchain-ollama
+playwright
+pydantic
+python-dotenv
+redis
+requests
+uvicorn
+browser-use
