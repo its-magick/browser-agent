@@ -31,7 +31,7 @@ async def fetch_result(task: str, session: str):
     cached_result = redis_client.get(cache_key)
     if cached_result:
         return json.loads(cached_result)
-    agent = Agent(llm=llm, task=task, browser=browser, controller=controller, validate_output=False)  # Initialize the agent without headless argument
+    agent = Agent(llm=llm, task=task, browser=browser, controller=controller, validate_output=True)  # Initialize the agent without headless argument
     result = await agent.run(max_steps=30)
     result_str = result.history[-1].result  # Extract the result string from the last history entry
     result_serializable = result_str if isinstance(result_str, str) else str(result_str)  # Ensure result is serializable
