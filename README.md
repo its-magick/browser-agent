@@ -7,7 +7,7 @@ Ever wished you had a robot friend who could browse the web for you? Well, now y
 
 This project contains two powerful components that work together like peanut butter and jelly (but more technical):
 
-### 🚀 app.py - The REST API Hero
+### 🚀 api.py - The REST API Hero
 - Handles HTTP requests like a champ
 - Provides a FastAPI endpoint at `/task`
 - Caches results in Redis (because nobody likes waiting twice)
