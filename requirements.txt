@@ -1,13 +1,29 @@
-ably
-asyncio
-fastapi
-langchain-anthropic
-langchain-google-genai
-langchain-ollama
-playwright
-pydantic
-python-dotenv
-redis
-requests
-uvicorn
-browser-use
+# Core dependencies
+ably>=2.0.0
+fastapi>=0.104.0
+langchain-openai>=0.0.1
+langchain-google-genai>=0.0.1
+langchain-ollama>=0.0.1
+playwright>=1.40.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+redis>=5.0.0
+requests>=2.31.0
+uvicorn>=0.24.0
+browser-use>=0.1.0
+
+# FastAPI extras
+fastapi[all]>=0.104.0  # Includes all optional dependencies
+starlette>=0.27.0  # FastAPI framework dependency
+
+# Error handling and logging
+python-json-logger>=2.0.0  # Structured JSON logging
+backoff>=2.2.0  # Retry mechanism
+tenacity>=8.2.0  # Retry utilities
+
+# Type checking
+typing-extensions>=4.8.0
+
+# Async support
+aiohttp>=3.9.0  # Async HTTP client
+asyncio>=3.4.3  # Async IO support

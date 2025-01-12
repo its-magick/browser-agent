@@ -37,7 +37,15 @@ ABLY_API_KEY=your_ably_key
 REDIS_URL=redis://your.redis.host:6379
 CHANNEL_NAME=your_ably_channel
 PORT=3000  # Optional, defaults to 3000
+LOG_LEVEL=INFO  # Optional, defaults to INFO. Valid levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
 ```
+
+The LOG_LEVEL environment variable controls the verbosity of logging:
+- DEBUG: Detailed information for debugging
+- INFO: General operational information
+- WARNING: Warning messages for potential issues
+- ERROR: Error messages for serious problems
+- CRITICAL: Critical issues that may cause system failure
 
 ## 🐳 Docker Setup
 
