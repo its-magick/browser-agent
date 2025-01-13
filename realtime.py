@@ -1,9 +1,14 @@
 import asyncio
+import time
 from ably import AblyRest
-from langchain_openai import ChatOpenAI
-from ably.types.message import Message
-from browser_use import Agent, Controller
+from browser_use.agent.service import Agent, Controller
 from browser_use.browser.browser import Browser, BrowserConfig
+from browser_use.browser.context import (
+    BrowserContextConfig,
+    BrowserContextWindowSize,
+)
+from langchain_anthropic import ChatAnthropic
+from ably.types.message import Message
 import redis
 import json
 import os
@@ -12,6 +17,29 @@ import signal
 import logging
 from dotenv import load_dotenv
 import threading
+# Clear the console
+os.system('cls' if os.name == 'nt' else 'clear')
+# ASCII Art Banner
+print("""
+      
+███╗   ███╗ █████╗  ██████╗ ██╗ ██████╗██╗  ██╗     █████╗ ██╗
+████╗ ████║██╔══██╗██╔════╝ ██║██╔════╝██║ ██╔╝    ██╔══██╗██║
+██╔████╔██║███████║██║  ███╗██║██║     █████╔╝     ███████║██║
+██║╚██╔╝██║██╔══██║██║   ██║██║██║     ██╔═██╗     ██╔══██║██║
+██║ ╚═╝ ██║██║  ██║╚██████╔╝██║╚██████╗██║  ██╗    ██║  ██║██║
+╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═╝  ╚═╝╚═╝
+
+██████╗ ██████╗  ██████╗ ██╗    ██╗███████╗███████╗██████╗      █████╗  ██████╗ ███████╗███╗   ██╗████████╗
+██╔══██╗██╔══██╗██╔═══██╗██║    ██║██╔════╝██╔════╝██╔══██╗    ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝
+██████╔╝██████╔╝██║   ██║██║ █╗ ██║███████╗█████╗  ██████╔╝    ███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║   
+██╔══██╗██╔══██╗██║   ██║██║███╗██║╚════██║██╔══╝  ██╔══██╗    ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║   
+██████╔╝██║  ██║╚██████╔╝╚███╔███╔╝███████║███████╗██║  ██║    ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║   
+╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚══════╝╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝   
+
+      
+                                   Author: Mark Scott
+                                   Version: 1.0.1
+""")
 
 # Configure logging with level from environment
 VALID_LOG_LEVELS = {
@@ -67,12 +95,7 @@ logger.info("Initializing core services")
 try:
     # Initialize browser with production configuration
     logger.info("Setting up browser configuration")
-    browser = Browser(
-        config=BrowserConfig(
-            headless=True,  # Headless mode for production
-            disable_security=True  # Required for certain automation tasks
-        )
-    )
+    browser = Browser(BrowserConfig(headless=True))
     logger.info("Browser initialized successfully")
 
     # Initialize Ably client
@@ -88,9 +111,9 @@ try:
 
     # Initialize language model
     logger.info("Setting up OpenAI language model")
-    llm = ChatOpenAI(
-        model="gpt-4o",
-        temperature=0.0,
+    llm = ChatAnthropic(
+        model="claude-3-5-sonnet-20241022",
+        temperature=0.5,
     )
     logger.info("Language model initialized successfully")
 
@@ -264,39 +287,46 @@ async def poll_ably_channel():
     max_retries = 3
     retry_delay = 5  # seconds
     
-    while True:
-        try:
-            logger.debug(f"Fetching history from channel {channel_name}")
-            history = await ably.channels.get(channel_name).history()
-            retry_count = 0  # Reset counter on successful connection
-            
-            message_count = len(history.items)
-            logger.debug(f"Retrieved {message_count} messages from history")
-            
-            for message in history.items:
-                try:
-                    logger.debug(f"Processing message: {message.id}")
-                    await ably_message_handler(message)
-                except Exception as e:
-                    logger.error(f"Error processing message: {str(e)}", exc_info=True)
-                    continue  # Continue with next message
-            
-            logger.debug("Waiting 10 seconds before next poll")
-            await asyncio.sleep(10)  # Poll every 10 seconds
-            
-        except Exception as e:
-            logger.error(f"Error polling Ably channel: {str(e)}", exc_info=True)
-            retry_count += 1
-            
-            if retry_count >= max_retries:
-                logger.warning("Max retries reached, implementing longer backoff")
-                await asyncio.sleep(60)  # Wait longer between retry batches
-                retry_count = 0
-            else:
-                logger.info(f"Retry attempt {retry_count}/{max_retries} in {retry_delay} seconds")
-                await asyncio.sleep(retry_delay)
+    try:
+        while True:
+            try:
+                logger.debug(f"Fetching history from channel {channel_name}")
+                history = await ably.channels.get(channel_name).history()
+                retry_count = 0  # Reset counter on successful connection
+                
+                message_count = len(history.items)
+                logger.debug(f"Retrieved {message_count} messages from history")
+                
+                for message in history.items:
+                    try:
+                        logger.debug(f"Processing message: {message.id}")
+                        await ably_message_handler(message)
+                    except Exception as e:
+                        logger.error(f"Error processing message: {str(e)}", exc_info=True)
+                        continue  # Continue with next message
+                
+                logger.debug("Waiting 10 seconds before next poll")
+                await asyncio.sleep(10)  # Poll every 10 seconds
+                
+            except asyncio.CancelledError:
+                logger.info("Ably channel polling cancelled - shutting down")
+                raise
+            except Exception as e:
+                logger.error(f"Error polling Ably channel: {str(e)}", exc_info=True)
+                retry_count += 1
+                
+                if retry_count >= max_retries:
+                    logger.warning("Max retries reached, implementing longer backoff")
+                    await asyncio.sleep(60)  # Wait longer between retry batches
+                    retry_count = 0
+                else:
+                    logger.info(f"Retry attempt {retry_count}/{max_retries} in {retry_delay} seconds")
+                    await asyncio.sleep(retry_delay)
+    except asyncio.CancelledError:
+        logger.info("Ably channel polling cancelled - shutting down")
+        raise
 
-def cleanup():
+async def cleanup():
     """
     Cleanup function to be called on shutdown.
     Ensures proper cleanup of resources and connections.
@@ -305,7 +335,7 @@ def cleanup():
     try:
         # Close browser
         logger.debug("Attempting to close browser")
-        browser.close()
+        await browser.close()
         logger.info("Browser closed successfully")
         
         # Close Redis connection
@@ -319,42 +349,53 @@ def cleanup():
         logger.info("Cleanup process completed")
 
 if __name__ == "__main__":
-    # Register signal handlers for graceful shutdown
-    def signal_handler(sig, frame):
-        """Handle shutdown signals by cleaning up resources"""
+    async def main():
+        """Main application entry point"""
+        loop = asyncio.get_event_loop()
+        
+        # Setup signal handlers
+        for sig in (signal.SIGTERM, signal.SIGINT):
+            loop.add_signal_handler(
+                sig,
+                lambda s=sig: asyncio.create_task(shutdown(sig))
+            )
+        
+        try:
+            logger.info("Starting application")
+            await poll_ably_channel()
+        except asyncio.CancelledError:
+            logger.info("Main loop cancelled - initiating shutdown")
+        except Exception as e:
+            logger.error(f"Critical application error: {str(e)}", exc_info=True)
+            await cleanup()
+            sys.exit(1)
+
+    async def shutdown(sig):
+        """Cleanup and shutdown the application"""
         signal_name = signal.Signals(sig).name
         logger.info(f"Received shutdown signal: {signal_name}")
         logger.info("Initiating graceful shutdown...")
-        cleanup()
-        logger.info("Shutdown complete")
-        sys.exit(0)
-    
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-
-    try:
-        logger.info("Initializing event loop")
-        loop = asyncio.get_event_loop()
-        loop.create_task(poll_ably_channel())
-
-        def run_forever():
-            """Keep the application running in the background"""
-            try:
-                while True:
-                    time.sleep(3600)  # Sleep for an hour
-            except Exception as e:
-                logger.error(f"Error in background thread: {str(e)}", exc_info=True)
-                sys.exit(1)
-
-        thread = threading.Thread(target=run_forever)
-        thread.daemon = True
-        thread.start()
-
-        logger.info("Application is running in the background")
-        logger.info("Press Ctrl+C to stop")
-        loop.run_forever()
         
-    except Exception as e:
-        logger.error(f"Critical application error: {str(e)}", exc_info=True)
-        cleanup()
-        sys.exit(1)
+        tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+        
+        # Cancel all running tasks
+        for task in tasks:
+            task.cancel()
+        
+        logger.info(f"Cancelling {len(tasks)} outstanding tasks")
+        await asyncio.gather(*tasks, return_exceptions=True)
+        
+        # Cleanup resources
+        await cleanup()
+        
+        logger.info("Shutdown complete")
+        loop = asyncio.get_event_loop()
+        loop.stop()
+
+    # Run the async application
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("Received keyboard interrupt")
+    finally:
+        logger.info("Application shutdown complete")
