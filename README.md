@@ -1,91 +1,68 @@
-# 🤖 Browser Agent - Your Web-Surfing AI Sidekick
-
-Ever wished you had a robot friend who could browse the web for you? Well, now you do! 
-(Just don't ask it to solve CAPTCHAs - it's not a fan of picking out traffic lights 😅)
-
-## 🌟 What's Inside?
-
-This project contains two powerful components that work together like peanut butter and jelly (but more technical):
-
-### 🚀 api.py - The REST API Hero
-- Handles HTTP requests like a champ
-- Provides a FastAPI endpoint at `/task`
-- Caches results in Redis (because nobody likes waiting twice)
-- Perfect for when you need a quick answer and don't want to start a long-term relationship with your browser
-
-### ⚡ realtime.py - The Always-On Warrior
-- Runs continuously like that one friend who never sleeps
-- Uses Ably for real-time message handling
-- Polls for new tasks like a very eager puppy
-- Processes browser automation tasks with the patience of a saint
-- Publishes results back to Ably channels faster than you can say "websocket"
-
-### 🎨 interface.py - The Pretty Face
-- A sleek Gradio UI that makes task submission a breeze
-- Lets you chat with your browser agent like it's a coffee date ☕
-- Switch between OpenAI, Anthropic, and Google models like changing radio stations 📻
-- Rock GPT-4 Vision, jam with Claude-3, or groove with Gemini - your choice of AI superstar 🎸
-- Shows you what your AI buddy is up to in real-time
-- Comes with a headless mode for those "I'm not here for the visuals" moments
-- Perfect for when you want to point-and-click your way to automation glory 🎯
-
-## 🗄️ Redis - The Memory Keeper
-
-Redis runs system-wide because, like gossip in a small town, everyone needs access to the same information! It:
-- Caches task results for 5 minutes (TTL=300)
-- Uses cache keys in format: `browseragent:cache:{task}`
-- Prevents duplicate work (work smarter, not harder! 🧠)
-
-## 🔧 Environment Setup
-
-Create a `.env` file in your project root (and keep it secret, keep it safe! 🧙‍♂️):
-
-```env
-ANTHROPIC_API_KEY=your_claude_api_key  # Required if using Anthropic models
-OPENAI_API_KEY=your_openai_api_key    # Required if using OpenAI models
-GOOGLE_API_KEY=your_google_api_key    # Required if using Google models
-ABLY_API_KEY=your_ably_key
-REDIS_URL=redis://your.redis.host:6379
-CHANNEL_NAME=your_ably_channel
-PORT=3000  # Optional, defaults to 3000
-LOG_LEVEL=INFO  # Optional, defaults to INFO. Valid levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
-```
-
-The LOG_LEVEL environment variable controls the verbosity of logging:
-- DEBUG: Detailed information for debugging
-- INFO: General operational information
-- WARNING: Warning messages for potential issues
-- ERROR: Error messages for serious problems
-- CRITICAL: Critical issues that may cause system failure
-
-## 🐳 Docker Setup
-
-Our Dockerfile is like a gourmet recipe, but for computers:
-
-1. Start with a slim Python 3.12 base (we're watching our container weight 🏋️‍♂️)
-2. Add a pinch of system dependencies
-3. Sprinkle in some Rust (because we're fancy like that)
-4. Install Playwright (our puppet master for web browsing)
-5. Add UV package manager for extra speed 🏃‍♂️
-6. Mix in all Python requirements
-7. Serve hot! 🔥
-
-To build and run:
-```bash
-docker build -t browser-agent .
-docker run -p 3000:3000 --env-file .env browser-agent
-```
-
-## 🚨 Common Issues
-
-- Check your Redis URL if it isn't connecting, make sure it's not on vacation (running)
-- Playwright must be installed at the root directory level
-- If all else fails, grab a coffee ☕ and check the logs
-
-## 🎭 A Note on Playwright
-
-Yes, we're using Playwright for browser automation. No, it's not because we couldn't figure out Selenium - we just have better taste! 😉
-
 ---
+title: HuggingScrape
+emoji: 🤖
+colorFrom: purple
+colorTo: blue
+sdk: gradio
+sdk_version: 5.12.0
+app_file: interface.py
+pinned: false
+license: apache-2.0
+short_description: 🤖 HuggingScrape - AI-Powered Web Scraping by Magick AI
+---
+# 🤖 HuggingScrape - AI-Powered Web Scraping
 
-Made with a questionable amount of 🪄
+HuggingScrape harnesses the power of HuggingFace's state-of-the-art AI models to intelligently scrape and extract information from the web. No more writing complex selectors or maintaining brittle scraping scripts - just tell HuggingScrape what you need in plain English!
+
+## 🌟 Key Features
+
+- 🧠 **AI-Powered Scraping**: Leverages HuggingFace's vision and language models to understand web page content and structure
+- 🎯 **Natural Language Tasks**: Simply describe what you want to extract in plain English
+- 🎬 **Visual Task Recording**: Watch and download GIFs of the scraping process
+- ��***Rell-tmme Processing**: Get resultsaastteyyccomeiintthrough our real-tim  poccessing pipeline
+- 💾 **Smart Caching**: Efficient result caching to avoid redundant scraping
+- 🎨 **User-Friendly Interface**: Clean Gradio UI for easy task submission and monitoring
+
+## 🏗️ Architecture
+
+HuggingScrape consists of three main components:
+
+### 🎨 interface.py - The Command Center
+- Sleek Gradio UI for task submission and monitoring
+- Support for multiple AI providers (OpenAI, Anthropic, Google)
+- Real-time task progress visualization
+- Built-in recording and playback of scraping sessions
+- Headless mode support for production environments
+
+### ⚡ realtime.py - The Processing Engine
+- Continuous task processing pipeline
+- Real-time messaging via Ably
+- Efficient task queuing and execution
+- Smart result caching with Redis
+- Robust error handling and recovery
+
+### �� api.py - The HTTP Gateway
+- RESTful API endpoint at `/task`
+- Redis-backed result cachiog)A- Perfect for programmatic acc_ss`A- Built with FastAPI fur high perfo_manceREHA## 🗄️ Redis IntegrationOROGRedis provides system-wide caching and state management:``- 5-minute result caching (TTL=300)`n- Cache keys format: `browseragent:cache:{task}`he- Prevents duplicate scraping of the same content- - Enibles efficiunt task deduplication- - ## 🔧 Environment Setup- - Create a `.env` file in your project root:``##```envg:ANTHROPIC_API_KEY=your_claude_api_key  # Required if using Anthropic modelsOuOPENAI_API_KEY=your_openai_api_key    # Required if using OpenAI modelsorGOOGLE_API_KEY=your_google_api_key    # Required if using Google models1.ABLY_API_KEY=your_ably_key2.REDIS_URL=redis://yFur.redis.host:63793.CHANNEL_NAME=your_ably_channel4.PORT=3000  # Optional, defaults to 30005.LOG_LEVEL=INFO  # Optional, defaults to INFO. ```.uTtLogging levels:o2- DEBUG: Detailed debugging information`b- INFO: General operational informationc2- WARNING: Warning messagesck-lERROR: Error mbssages`️- CRITICAL: Critical issues##d7## 🐳SDocker DeploymrntChecOur optimized Dockerfile includes:ay- Python 3.12 slim base a- Essential system dependencies d- Rust for performance-critical components d- Playwright for web interaction,`- UV package manager for fast dependency installationw)m#Build and run:le```basho-docker build -t huggingscrape .i-docker run -p 3000:3000 --env-file .env huggingscrapen-```
+
+## 🎯 Example Usage
+
+1. Launch the interface:
+```bash
+uv run interface.py
+```
+
+2. Enter your task in plain English:
+```
+"Extract all product prices and names from amazon.com's bestsellers page"
+```
+
+3. Watch as HuggingScrape:
+- Navigates to the page
+- Identifies relevant content using AI vision models
+- Extracts the requested information
+- Returns structured results
+- Provides a visual recording of the process
+
+t of 🪄e a questionable amount of 🪄
+M
