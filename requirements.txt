@@ -10,7 +10,7 @@ python-dotenv>=1.0.0
 redis>=5.0.0
 requests>=2.31.0
 uvicorn>=0.24.0
-browser-use>=0.1.18
+browser-use>=0.1.21
 
 # FastAPI extras
 fastapi[all]>=0.104.0  # Includes all optional dependencies
@@ -27,3 +27,4 @@ typing-extensions>=4.8.0
 # Async support
 aiohttp>=3.9.0  # Async HTTP client
 asyncio>=3.4.3  # Async IO support
+gradio  # Web-based UI for ML models
