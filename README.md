@@ -20,6 +20,15 @@ This project contains two powerful components that work together like peanut but
 - Processes browser automation tasks with the patience of a saint
 - Publishes results back to Ably channels faster than you can say "websocket"
 
+### 🎨 interface.py - The Pretty Face
+- A sleek Gradio UI that makes task submission a breeze
+- Lets you chat with your browser agent like it's a coffee date ☕
+- Switch between OpenAI and Anthropic models like changing radio stations 📻
+- Rock GPT-4 Vision or jam with Claude-3 - your choice of AI superstar 🎸
+- Shows you what your AI buddy is up to in real-time
+- Comes with a headless mode for those "I'm not here for the visuals" moments
+- Perfect for when you want to point-and-click your way to automation glory 🎯
+
 ## 🗄️ Redis - The Memory Keeper
 
 Redis runs system-wide because, like gossip in a small town, everyone needs access to the same information! It:
@@ -32,7 +41,8 @@ Redis runs system-wide because, like gossip in a small town, everyone needs acce
 Create a `.env` file in your project root (and keep it secret, keep it safe! 🧙‍♂️):
 
 ```env
-ANTHROPIC_API_KEY=your_claude_api_key
+ANTHROPIC_API_KEY=your_claude_api_key  # Required if using Anthropic models
+OPENAI_API_KEY=your_openai_api_key  # Required if using OpenAI models
 ABLY_API_KEY=your_ably_key
 REDIS_URL=redis://your.redis.host:6379
 CHANNEL_NAME=your_ably_channel
