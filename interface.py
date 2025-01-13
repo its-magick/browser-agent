@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -8,6 +9,7 @@ from gradio import Blocks, Markdown, Row, Column, Textbox, Dropdown, Checkbox, B
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -63,9 +65,12 @@ async def run_browser_task(
 	if provider == 'openai':
 		os.environ['OPENAI_API_KEY'] = api_key
 		llm = ChatOpenAI(model=model)
-	else:  # anthropic
+	elif provider == 'anthropic':
 		os.environ['ANTHROPIC_API_KEY'] = api_key
 		llm = ChatAnthropic(model=model)
+	else:  # google
+		os.environ['GOOGLE_API_KEY'] = api_key
+		llm = ChatGoogleGenerativeAI(model=model)
 
 	try:
 		agent = Agent(
@@ -80,13 +85,13 @@ async def run_browser_task(
 
 
 def create_ui():
-	with Blocks(title='Browser Use GUI') as interface:
-		Markdown('# Browser Use Task Automation')
+	with Blocks(title='HuggingScrape') as interface:
+		Markdown('# HuggingScrape - A Browser Automation Tool')
 
 		with Row():
 			with Column():
 				provider = Dropdown(
-					choices=['openai', 'anthropic'],
+					choices=['openai', 'anthropic', 'google'],
 					label='Provider',
 					value='openai'
 				)
@@ -105,17 +110,32 @@ def create_ui():
 					label='Model',
 					value='gpt-4-vision'
 				)
-				headless = Checkbox(label='Run Headless', value=True)
 				submit_btn = Button('Run Task')
 
 			with Column():
 				output = Textbox(label='Output', lines=10, interactive=False)
+				with Row():
+					gif_output = gr.Image(label="Task Recording", type="filepath", container=True)
+					with gr.Column():
+						gr.HTML("""
+							<style>
+								.gif-container img {
+									max-width: 100%;
+									height: auto;
+									border-radius: 8px;
+									box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+								}
+							</style>
+						""")
+					download_btn = gr.File(label="Download Recording")
 
 		def update_model_choices(provider):
 			if provider == 'openai':
-				return gr.Dropdown(choices=['gpt-4o', 'gpt-4o-mini'], value='gpt-4o')
-			else:  # anthropic
-				return gr.Dropdown(choices=['claude-3-5-sonnet-latest', 'claude-3-opus-latest'], value='claude-3-5-sonnet-latest')
+				return gr.Dropdown(choices=['gpt-4-vision'], value='gpt-4-vision')
+			elif provider == 'anthropic':
+				return gr.Dropdown(choices=['claude-3-opus', 'claude-3-sonnet'], value='claude-3-opus')
+			else:  # google
+				return gr.Dropdown(choices=['gemini-2.0-flash-exp', 'gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-1.5-pro'], value='gemini-pro-vision')
 
 		provider.change(
 			fn=update_model_choices,
@@ -123,10 +143,18 @@ def create_ui():
 			outputs=[model]
 		)
 
+		def on_task_complete(*args):
+			result = asyncio.run(run_browser_task(*args))
+			# Give a moment for the gif to be generated
+			time.sleep(2)
+			if os.path.exists("agent_history.gif"):
+				return result, "agent_history.gif", "agent_history.gif"
+			return result, None, None
+
 		submit_btn.click(
-			fn=lambda *args: asyncio.run(run_browser_task(*args)),
-			inputs=[task, api_key, provider, model, headless],
-			outputs=output,
+			fn=on_task_complete,
+			inputs=[task, api_key, provider, model],
+			outputs=[output, gif_output, download_btn],
 		)
 
 	return interface
@@ -134,4 +162,4 @@ def create_ui():
 
 if __name__ == '__main__':
 	demo = create_ui()
-	demo.launch()
+	demo.launch(share=True)
