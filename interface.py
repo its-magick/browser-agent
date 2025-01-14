@@ -14,7 +14,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from browser_use import Agent
+from browser_use import Agent, Browser
+from browser_use.browser.browser import BrowserContext
 
 load_dotenv()
 
@@ -76,7 +77,7 @@ async def run_browser_task(
 		agent = Agent(
 			task=task,
 			llm=llm,
-			headless=True
+			browser=Browser(BrowserContext(headless=True))
 		)
 		result = await agent.run()
 		#  TODO: The result cloud be parsed better
