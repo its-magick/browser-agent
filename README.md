@@ -1,104 +1,67 @@
-# 🤖 HuggingScrape - AI-Powered Web Interface
+title: Huggingscrape
+emoji: 🤖
+colorFrom: purple
+colorTo: blue
+sdk: gradio
+sdk_version: 5.12.0
+app_file: interface.py
+pinned: false
+license: apache-2.0
+python_version:3.11
+short_description: 🤖 HuggingScrape - AI-Powered Web Scraping by Magick AI
+# 🤖 HuggingScrape - AI-Powered Web Scraping
 
-HuggingScrape provides an elegant Gradio interface for AI-powered web automation. Simply describe your task in plain English, and watch as the AI navigates and interacts with websites through our intuitive interface.
+HuggingScrape harnesses the power of HuggingFace's state-of-the-art AI models to intelligently scrape and extract information from the web. No more writing complex selectors or maintaining brittle scraping scripts - just tell HuggingScrape what you need in plain English!
 
-## 🎨 Interface Features
+## 🌟 Key Features
 
-### Multi-Model Support
-- **OpenAI Integration**: Leverage GPT-4 Vision for advanced visual understanding
-- **Anthropic Models**: Access Claude-3 Opus and Sonnet for sophisticated reasoning
-- **Google AI**: Utilize Gemini's powerful models for diverse tasks
-- **Easy Switching**: Seamlessly switch between AI providers through the dropdown menu
+- 🧠 **AI-Powered Scraping**: Leverages HuggingFace's vision and language models to understand web page content and structure
+- 🎯 **Natural Language Tasks**: Simply describe what you want to extract in plain English
+- 🎬 **Visual Task Recording**: Watch and download GIFs of the scraping process
+- ��***Rell-tmme Processing**: Get resultsaastteyyccomeiintthrough our real-tim  poccessing pipeline
+- 💾 **Smart Caching**: Efficient result caching to avoid redundant scraping
+- 🎨 **User-Friendly Interface**: Clean Gradio UI for easy task submission and monitoring
 
-### Visual Task Recording
-- **Live GIF Generation**: Watch your automation tasks unfold in real-time
-- **Downloadable Recordings**: Save and share your automation sessions
-- **Visual Feedback**: See exactly how the AI interacts with websites
-- **Progress Tracking**: Monitor task completion through the interface
+## 🏗️ Architecture
 
-### User-Friendly Controls
-- **Task Description Box**: Write natural language instructions
-- **Secure API Key Input**: Safely enter and manage API keys
-- **Provider Selection**: Choose your preferred AI model provider
-- **Model Selection**: Pick specific models based on your needs
-- **Run Task Button**: One-click execution of your automation tasks
+HuggingScrape consists of three main components:
 
-### Real-Time Output
-- **Task Results Display**: See extracted data and task outcomes immediately
-- **Error Handling**: Clear feedback when issues occur
-- **Progress Updates**: Follow along as your task executes
-- **Visual Results**: View both text output and visual recordings
+### 🎨 interface.py - The Command Center
+- Sleek Gradio UI for task submission and monitoring
+- Support for multiple AI providers (OpenAI, Anthropic, Google)
+- Real-time task progress visualization
+- Built-in recording and playback of scraping sessions
+- Headless mode support for production environments
 
-## 🚀 Quick Start
+### ⚡ realtime.py - The Processing Engine
+- Continuous task processing pipeline
+- Real-time messaging via Ably
+- Efficient task queuing and execution
+- Smart result caching with Redis
+- Robust error handling and recovery
+
+### �� api.py - The HTTP Gateway
+- RESTful API endpoint at `/task`
+- Redis-backed result cachiog)A- Perfect for programmatic acc_ss`A- Built with FastAPI fur high perfo_manceREHA## 🗄️ Redis IntegrationOROGRedis provides system-wide caching and state management:``- 5-minute result caching (TTL=300)`n- Cache keys format: `browseragent:cache:{task}`he- Prevents duplicate scraping of the same content- - Enibles efficiunt task deduplication- - ## 🔧 Environment Setup- - Create a `.env` file in your project root:``##```envg:ANTHROPIC_API_KEY=your_claude_api_key  # Required if using Anthropic modelsOuOPENAI_API_KEY=your_openai_api_key    # Required if using OpenAI modelsorGOOGLE_API_KEY=your_google_api_key    # Required if using Google models1.ABLY_API_KEY=your_ably_key2.REDIS_URL=redis://yFur.redis.host:63793.CHANNEL_NAME=your_ably_channel4.PORT=3000  # Optional, defaults to 30005.LOG_LEVEL=INFO  # Optional, defaults to INFO. ```.uTtLogging levels:o2- DEBUG: Detailed debugging information`b- INFO: General operational informationc2- WARNING: Warning messagesck-lERROR: Error mbssages`️- CRITICAL: Critical issues##d7## 🐳SDocker DeploymrntChecOur optimized Dockerfile includes:ay- Python 3.12 slim base a- Essential system dependencies d- Rust for performance-critical components d- Playwright for web interaction,`- UV package manager for fast dependency installationw)m#Build and run:le```basho-docker build -t huggingscrape .i-docker run -p 3000:3000 --env-file .env huggingscrapen-```
+
+## 🎯 Example Usage
 
 1. Launch the interface:
 ```bash
 uv run interface.py
 ```
 
-2. Configure your environment:
-```env
-ANTHROPIC_API_KEY=your_claude_api_key  # For Claude models
-OPENAI_API_KEY=your_openai_api_key    # For GPT-4 Vision
-GOOGLE_API_KEY=your_google_api_key    # For Gemini models
+2. Enter your task in plain English:
+```
+"Extract all product prices and names from amazon.com's bestsellers page"
 ```
 
-3. Access the interface:
-- Open your browser to the provided local URL
-- Select your preferred AI provider
-- Enter your API key
-- Describe your task
-- Click "Run Task" and watch the magic happen!
+3. Watch as HuggingScrape:
+- Navigates to the page
+- Identifies relevant content using AI vision models
+- Extracts the requested information
+- Returns structured results
+- Provides a visual recording of the process
 
-## 💡 Example Tasks
-
-The interface excels at tasks like:
-```
-"Find the best-selling products on Amazon"
-"Extract contact information from a company website"
-"Compare prices across multiple e-commerce sites"
-"Fill out a web form with specific information"
-```
-
-## 🎯 Interface Layout
-
-```
-┌─────────────────────────────────────┐
-│        HuggingScrape Header         │
-├───────────────────┬─────────────────┤
-│   Control Panel   │  Output Panel   │
-│ ┌───────────────┐ │ ┌─────────────┐ │
-│ │  AI Provider  │ │ │    Task     │ │
-│ │   API Key     │ │ │   Output    │ │
-│ │     Task      │ │ │             │ │
-│ │    Model      │ │ │             │ │
-│ │   Run Task    │ │ │             │ │
-│ └───────────────┘ │ └─────────────┘ │
-│                   │ ┌─────────────┐ │
-│                   │ │  Recording  │ │
-│                   │ │    View     │ │
-│                   │ └─────────────┘ │
-└───────────────────┴─────────────────┘
-```
-
-## 🔧 Technical Requirements
-
-- Python 3.12 or higher
-- UV package manager
-- Required Python packages:
-  - gradio
-  - langchain_openai
-  - langchain_anthropic
-  - langchain_google_genai
-  - python-dotenv
-
-## 🚨 Troubleshooting Interface Issues
-
-- **API Key Errors**: Verify API key is correctly entered and valid
-- **Model Selection**: Ensure selected model matches the API provider
-- **Recording Issues**: Check if task completed successfully
-- **Display Problems**: Verify browser compatibility and refresh
-
----
-
-Built with Gradio 🎨 and HuggingFace 🤗
+t of 🪄e a questionable amount of 🪄
+M

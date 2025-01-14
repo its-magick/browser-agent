@@ -76,6 +76,7 @@ async def run_browser_task(
 		agent = Agent(
 			task=task,
 			llm=llm,
+			headless=True
 		)
 		result = await agent.run()
 		#  TODO: The result cloud be parsed better
