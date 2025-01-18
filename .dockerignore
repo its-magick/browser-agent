@@ -1,0 +1,53 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# Development/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+docs/
+*.md
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Test cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution/packaging
+dist/
+build/
+*.egg-info/
