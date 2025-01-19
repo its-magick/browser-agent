@@ -111,22 +111,6 @@ python realtime.py
 # (but actually useful)
 ```
 
-### 🎭 Features That Make It Special
-
-- 🔄 **Live Updates**: See results faster than you can say "web scraping"
-- 📡 **Ably Integration**: Because WebSockets are so 2020
-- 🎥 **Live Recording**: Watch your scraping happen in real-time
-- 🧯 **Auto-Recovery**: Like a cat, it always lands on its feet
-
-### 🎪 Channel Structure
-
-```javascript
-// Subscribe to these channels to feel like a tech wizard
-browser-result: "Where the magic happens"
-browser-error: "When things go sideways"
-browser-status: "Is it coffee break time?"
-```
-
 ## 📝 Logging (For When Things Go South)
 
 Set `LOG_LEVEL` to your preferred flavor of panic:
