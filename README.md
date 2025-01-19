@@ -34,7 +34,7 @@ docker build -t browseragent .
 docker run -p 3000:3000 \
   --env-file .env \
   -v $(pwd)/data:/app/data \
-  huggingscrape
+  browseragent
 ```
 
 3. Useful Docker commands (for when things inevitably go wrong):
