@@ -40,13 +40,13 @@ docker run -p 3000:3000 \
 3. Useful Docker commands (for when things inevitably go wrong):
 ```bash
 # View logs
-docker logs huggingscrape
+docker logs browseragent
 
 # Stop container
-docker stop huggingscrape
+docker stop browseragent
 
 # Remove container
-docker rm huggingscrape
+docker rm browseragent
 
 # Rebuild and restart (development)
 docker compose up --build
