@@ -26,7 +26,7 @@ PORT=3000                                # Optional, defaults to 3000
 
 1. Build the image (grab a coffee, this might take a minute):
 ```bash
-docker build -t huggingscrape .
+docker build -t browseragent .
 ```
 
 2. Run it like you mean it:
