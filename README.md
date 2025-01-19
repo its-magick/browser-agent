@@ -1,6 +1,6 @@
 # 🤖 BrowserAgent - Because Life's Too Short for Manual Scraping
 
-Need web data but tired of wrestling with XPaths and CSS selectors? HuggingScrape is your AI-powered web scraping butler! Just tell it what you want in plain English, sit back, and watch the magic happen. No PhD in DOM manipulation required! 
+Need web data but tired of wrestling with XPaths and CSS selectors? BrowserAgent is your AI-powered web scraping butler! Just tell it what you want in plain English, sit back, and watch the magic happen. No PhD in DOM manipulation required! 
 
 ## 🌟 Features That Make Data Engineers Smile
 
